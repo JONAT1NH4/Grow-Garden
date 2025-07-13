@@ -33,7 +33,7 @@ local function sendWebhook(data)
 	req({
 		Url = webhookURL,
 		Method = "POST",
-		Headers = {["Content-Type"] = "application/json"},
+		Headers = { ["Content-Type"] = "application/json" },
 		Body = HttpService:JSONEncode(data)
 	})
 end
@@ -103,7 +103,7 @@ if backpack then
 	end)
 end
 
--- 🐾 Monitorar pets adquiridos
+-- 🐾 Monitorar pets adquiridos e evolução
 local function trackPets()
 	local petsFolder = player:FindFirstChild("Pets")
 	if not petsFolder then return end
@@ -158,5 +158,19 @@ for _, evt in ipairs(possibleAbilities) do
 	end
 end
 
--- Executa o script original do Grow Garden
-loadstring(game:HttpGet("https://raw.githubusercontent.com/JONAT1NH4/Grow-Garden/main/hello.lua"))()
+-- 🎉 Monitorar eventos especiais (pasta Events no ReplicatedStorage)
+local lastEvents = {}
+RunService.RenderStepped:Connect(function()
+	local EventsFolder = ReplicatedStorage:FindFirstChild("Events")
+	if EventsFolder then
+		for _, event in pairs(EventsFolder:GetChildren()) do
+			if not lastEvents[event.Name] then
+				sendWebhook(mkEmbed("🎉 Novo Evento Especial", 15105570, {
+					{name = "Evento", value = event.Name, inline = true},
+					{name = "👤 Jogador", value = username, inline = true}
+				}))
+				lastEvents[event.Name] = true
+			end
+		end
+	end
+end)
