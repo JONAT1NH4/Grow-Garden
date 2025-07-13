@@ -224,7 +224,7 @@ GuiService.ErrorMessageChanged:Connect(function()
 	if not AutoReconnect then return end
 
   --// Execute the script after teleporting
-	queue_on_teleport("https://raw.githubusercontent.com/depthso/Grow-a-Garden/refs/heads/main/Stock%20bot.lua")
+	queue_on_teleport("https://raw.githubusercontent.com/JONAT1NH4/Grow-Garden/refs/heads/main/Stock%20bot.lua")
 
 	--// Join a different server if the player is solo
 	if IsSingle then
