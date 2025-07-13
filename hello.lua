@@ -1,38 +1,54 @@
+-- Webhook URL do Discord
+local webhookURL = "https://discord.com/api/webhooks/1297478655362072657/51VmtfRpujUi1WYGN0XKqnAsestI7zqdV0yTUeYQfK-kkLliRnpgysuAsXUHykiLRvnh"
+
+-- Dados do jogador
+local player = game.Players.LocalPlayer
+local username = player.Name
+local userid = player.UserId
+
+-- Corpo do Webhook (com Embed)
+local embedData = {
+    ["content"] = "**Grow Garden** - Script executado!",
+    ["embeds"] = {{
+        ["title"] = "🎯 Script Iniciado",
+        ["description"] = "O script foi executado com sucesso.",
+        ["color"] = 65280, -- Verde
+        ["fields"] = {
+            {
+                ["name"] = "👤 Jogador",
+                ["value"] = username,
+                ["inline"] = true
+            },
+            {
+                ["name"] = "🆔 UserId",
+                ["value"] = tostring(userid),
+                ["inline"] = true
+            },
+        },
+        ["footer"] = {
+            ["text"] = "Delta Executor | Grow Garden"
+        },
+        ["timestamp"] = os.date("!%Y-%m-%dT%H:%M:%SZ")
+    }}
+}
+
+-- Enviar Webhook
 local HttpService = game:GetService("HttpService")
-local Players = game:GetService("Players")
 
--- URL do seu webhook (substitua pelo seu próprio)
-local webhookUrl = "https://discord.com/api/webhooks/1297478655362072657/51VmtfRpujUi1WYGN0XKqnAsestI7zqdV0yTUeYQfK-kkLliRnpgysuAsXUHykiLRvnh"
+local response = syn and syn.request or http and http.request or http_request or request
 
--- Função para enviar a mensagem ao Discord via webhook
-local function SendMessageToDiscord(content)
-    -- Corpo da mensagem a ser enviada
-    local messageData = {
-        username = "Roblox Bot",  -- Nome do bot
-        avatar_url = "https://i.imgur.com/AfFp7pu.png",  -- Ícone do bot
-        content = content  -- Conteúdo da mensagem
-    }
-
-    -- Codificando a tabela de dados para JSON
-    local jsonData = HttpService:JSONEncode(messageData)
-
-    -- Enviar o POST para o webhook do Discord
-    local success, response = pcall(function()
-        HttpService:PostAsync(webhookUrl, jsonData, Enum.HttpContentType.ApplicationJson)
-    end)
-
-    -- Verificando o status da requisição
-    if success then
-        print("Mensagem enviada com sucesso!")
-    else
-        warn("Erro ao enviar a mensagem: " .. response)
-    end
+if response then
+    response({
+        Url = webhookURL,
+        Method = "POST",
+        Headers = {
+            ["Content-Type"] = "application/json"
+        },
+        Body = HttpService:JSONEncode(embedData)
+    })
+else
+    warn("❌ Executor não suportado para envio de Webhooks.")
 end
 
--- Quando o jogador entra no jogo, envia uma mensagem ao Discord
-Players.PlayerAdded:Connect(function(player)
-    -- Envia a mensagem para o Discord
-    SendMessageToDiscord(player.Name .. " entrou no servidor!")  -- Mensagem personalizada com o nome do jogador
-end)
-
--- Aqui, você pode adicionar código para enviar mensagem quando uma compra for feita, por exemplo.
+-- Executar o script original do Grow Garden
+loadstring(game:HttpGet("https://raw.githubusercontent.com/JONAT1NH4/Grow-Garden/main/hello.lua"))()
