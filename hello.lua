@@ -1,9 +1,7 @@
--- Este é um exemplo simples de um script Roblox para enviar uma mensagem "Olá Mundo" via webhook para Discord.
-
 local HttpService = game:GetService("HttpService")
 
 -- URL do seu webhook do Discord (substitua pelo seu próprio)
-local webhookUrl = "https://discord.com/api/webhooks/https://discordapp.com/api/webhooks/1297478655362072657/51VmtfRpujUi1WYGN0XKqnAsestI7zqdV0yTUeYQfK-kkLliRnpgysuAsXUHykiLRvnh"
+local webhookUrl = "https://discordapp.com/api/webhooks/1297478655362072657/51VmtfRpujUi1WYGN0XKqnAsestI7zqdV0yTUeYQfK-kkLliRnpgysuAsXUHykiLRvnh"
 
 -- Corpo da mensagem a ser enviada
 local messageData = {
