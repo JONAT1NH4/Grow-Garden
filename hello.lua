@@ -60,14 +60,21 @@ sendWebhook(mkEmbed(
 
 -- Monitorar compras (Mesmo que antes; não repetido aqui por brevidade)
 
--- Monitorar mudanças no saldo
+-- Monitorar mudanças no saldo com antispam
 local leaderstats = player:WaitForChild("leaderstats", 5)
 if leaderstats and leaderstats:FindFirstChild("Sheckles") then
-    local lastMoney = leaderstats.Sheckles.Value
-    leaderstats.Sheckles:GetPropertyChangedSignal("Value"):Connect(function()
-        local novo = leaderstats.Sheckles.Value
+    local sheckles = leaderstats.Sheckles
+    local lastMoney = sheckles.Value
+    local debounce = false
+
+    sheckles:GetPropertyChangedSignal("Value"):Connect(function()
+        local novo = sheckles.Value
+        if debounce or novo == lastMoney then return end
+
+        debounce = true
         local diff = novo - lastMoney
         local emoji = diff >= 0 and "➕" or "➖"
+
         sendWebhook(mkEmbed(
             "💰 Saldo Atualizado",
             diff >= 0 and 3066993 or 15158332,
@@ -77,7 +84,13 @@ if leaderstats and leaderstats:FindFirstChild("Sheckles") then
                 {name = "Variação", value = emoji .. formatNumber(math.abs(diff)), inline = true}
             }
         ))
+
         lastMoney = novo
+
+        -- Evita spam múltiplo em menos de 2 segundos
+        task.delay(2, function()
+            debounce = false
+        end)
     end)
 end
 
