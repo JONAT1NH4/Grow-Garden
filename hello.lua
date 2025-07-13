@@ -91,6 +91,17 @@ if backpack then
 	end
 
 	backpack.ChildAdded:Connect(function(item)
+		-- Detecta seeds compradas (tem Plant_Name)
+		local plantNameObj = item:FindFirstChild("Plant_Name")
+		if plantNameObj then
+			sendWebhook(mkEmbed("🪴 Seed Comprada", 5763719, {
+				{name = "Planta/Seed", value = plantNameObj.Value, inline = true},
+				{name = "👤 Jogador", value = username, inline = true}
+			}))
+			return
+		end
+
+		-- Detecta frutas/sementes/itens raros normalmente
 		if item:IsA("Tool") and (item.Name:lower():find("fruit") or item.Name:lower():find("seed") or item.Name:lower():find("rare")) then
 			if not known[item.Name] then
 				sendWebhook(mkEmbed("🎁 Novo Item", 15844367, {
